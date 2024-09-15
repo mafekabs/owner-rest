@@ -32,16 +32,8 @@ public class OwnerServiceImpl implements OwnerService {
 
 	@Override
 	public OwnerResponse createOwner(OwnerRequest owner) {
-		Owner _owner = Owner.builder()
-			  .firstName(owner.firstname())
-			  .lastName(owner.lastname())
-			  .build();
-		Owner savedOwner = ownerRepository.save(_owner);
-		return OwnerResponse.builder()
-				.id(savedOwner.getId())
-				.firstname(savedOwner.getFirstName())
-				.lastName(savedOwner.getLastName())
-				.build();
+		Owner savedOwner = ownerRepository.save(covertRequestToOwner(owner));
+		return covertOwnerToResponse(savedOwner);
 	}
 
 	@Override
@@ -50,18 +42,14 @@ public class OwnerServiceImpl implements OwnerService {
 		if(owner.isEmpty()) {
 			throw new EntityNotFoundException(String.format("No Owner found for ID = %s", id));
 		}
-		return OwnerResponse.builder()
-				.id(owner.get().getId())
-				.firstname(owner.get().getFirstName())
-				.lastName(owner.get().getLastName())
-				.build();
+		return covertOwnerToResponse(owner.get());
 	}
 
 	@Override
 	public List<OwnerResponse> getAllOwners() {
 		List<Owner> owners = ownerRepository.findAll();
 		List<OwnerResponse> ownersRes = owners.stream()
-				.map(owner -> new OwnerResponse(owner.getId(), owner.getFirstName(), owner.getLastName()))
+				.map(owner -> covertOwnerToResponse(owner))
 				.collect(Collectors.toList());
 		return ownersRes;
 	}
@@ -69,23 +57,41 @@ public class OwnerServiceImpl implements OwnerService {
 	@Override
 	public OwnerResponse updateOwner(Long id, OwnerRequest owner) {
 		OwnerResponse ownerRes = getOwner(id);
-		Owner _owner = Owner.builder()
-			  .id(ownerRes.id())
-			  .firstName(ownerRes.firstname())
-			  .lastName(ownerRes.lastName())
-			  .build();
-		Owner savedOwner = ownerRepository.save(_owner);
-		return OwnerResponse.builder()
-			   .id(savedOwner.getId())
-			   .firstname(savedOwner.getFirstName())
-			   .lastName(savedOwner.getLastName())
-			   .build();
+
+		Owner savedOwner = ownerRepository.save(covertOwnerResponseToOwner(ownerRes));
+		return covertOwnerToResponse(savedOwner);
 	}
 
 	@Override
 	public String deleteOwner(Long id) {
 		ownerRepository.deleteById(id);
 		return String.format("Successfully deleted an Owner with ID = %s", id);
+	}
+	
+	public Owner covertRequestToOwner(OwnerRequest owner) {
+		Owner _owner = Owner.builder()
+				  .firstName(owner.firstname())
+				  .lastName(owner.lastname())
+				  .build();
+		return _owner;
+	}
+	
+	public Owner covertOwnerResponseToOwner(OwnerResponse ownerResponse) {
+		Owner _owner = Owner.builder()
+				  .id(ownerResponse.id())
+				  .firstName(ownerResponse.firstname())
+				  .lastName(ownerResponse.lastName())
+				  .build();
+		return _owner;
+	}
+	
+	public OwnerResponse covertOwnerToResponse(Owner owner) {
+		OwnerResponse response =  OwnerResponse.builder()
+		.id(owner.getId())
+		.firstname(owner.getFirstName())
+		.lastName(owner.getLastName())
+		.build();
+		return response;
 	}
 
 }
