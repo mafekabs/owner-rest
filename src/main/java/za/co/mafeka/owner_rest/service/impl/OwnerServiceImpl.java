@@ -70,8 +70,8 @@ public class OwnerServiceImpl implements OwnerService {
 	
 	public Owner covertRequestToOwner(OwnerRequest owner) {
 		Owner _owner = Owner.builder()
-				  .firstName(owner.firstname())
-				  .lastName(owner.lastname())
+				  .firstName(owner.firstName())
+				  .lastName(owner.lastName())
 				  .build();
 		return _owner;
 	}
@@ -79,7 +79,7 @@ public class OwnerServiceImpl implements OwnerService {
 	public Owner covertOwnerResponseToOwner(OwnerResponse ownerResponse) {
 		Owner _owner = Owner.builder()
 				  .id(ownerResponse.id())
-				  .firstName(ownerResponse.firstname())
+				  .firstName(ownerResponse.firstName())
 				  .lastName(ownerResponse.lastName())
 				  .build();
 		return _owner;
@@ -88,7 +88,7 @@ public class OwnerServiceImpl implements OwnerService {
 	public OwnerResponse covertOwnerToResponse(Owner owner) {
 		OwnerResponse response =  OwnerResponse.builder()
 		.id(owner.getId())
-		.firstname(owner.getFirstName())
+		.firstName(owner.getFirstName())
 		.lastName(owner.getLastName())
 		.build();
 		return response;
