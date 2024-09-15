@@ -56,7 +56,6 @@ public class OwnerController {
 	
 	@DeleteMapping("/{id}")
 	public String deleteCar(@PathVariable Long id) {
-		ownerService.deleteOwner(id);
-		return "Successfuly deleted Car with id=" + id;
+		return ownerService.deleteOwner(id);
 	}
 }
