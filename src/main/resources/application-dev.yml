@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: owner-rest
+  datasource:
+    url: jdbc:postgresql://localhost:5433/ownerdb
+    username: postgres
+    password: mafekabs
+#JPA Settings
+  jpa:
+    hibernate:
+      ddl-auto: create
+#  data.mongodb:
+#    uri: mongodb://root:admin@localhost:27017/order?authSource=admin
+#  flyway:
+#   baselineOnMigrate: true
+#   spring.flyway.password: postgres
+#   spring.flyway.user: mafekabs
+   

@@ -1,0 +1,37 @@
+services:
+  ownerdb:
+    image: postgres
+    container_name: ownerdb
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_DB: ownerdb
+      POSTGRES_PASSWORD: mafekabs
+    ports:
+      - 5433:5432
+
+  owner-rest:
+    image: owner-rest:latest
+    container_name: ownerapi
+    depends_on:
+      - ownerdb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ownerdb:5432/ownerdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: mafekabs
+    volumes:
+      - APPDATA:/opt/app
+    ports:
+      - 8082:8080
+volumes:
+  APPDATA:
